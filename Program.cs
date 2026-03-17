@@ -34,7 +34,12 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Upload}/{action=Index}/{id?}");
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
-app.Urls.Add($"http://0.0.0.0:{port}");
+
+// 🔥 KEY FIX: Only apply this for production (Render)
+if (!app.Environment.IsDevelopment())
+{
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
+    app.Urls.Add($"http://0.0.0.0:{port}");
+}
 
 app.Run();

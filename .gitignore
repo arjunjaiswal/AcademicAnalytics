@@ -1,0 +1,9 @@
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.log
+appsettings.Development.json
+node_modules/
+wwwroot/lib/

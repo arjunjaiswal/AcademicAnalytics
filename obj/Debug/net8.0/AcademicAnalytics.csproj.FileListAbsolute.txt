@@ -33,6 +33,7 @@ D:\AcademicAnalytics\obj\Debug\net8.0\AcademicAnalytics.csproj.CoreCompileInputs
 D:\AcademicAnalytics\obj\Debug\net8.0\AcademicAnalytics.MvcApplicationPartsAssemblyInfo.cache
 D:\AcademicAnalytics\obj\Debug\net8.0\AcademicAnalytics.RazorAssemblyInfo.cache
 D:\AcademicAnalytics\obj\Debug\net8.0\AcademicAnalytics.RazorAssemblyInfo.cs
+D:\AcademicAnalytics\obj\Debug\net8.0\AcademicAnalytics.sourcelink.json
 D:\AcademicAnalytics\obj\Debug\net8.0\rjimswa.dswa.cache.json
 D:\AcademicAnalytics\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 D:\AcademicAnalytics\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
@@ -51,4 +52,3 @@ D:\AcademicAnalytics\obj\Debug\net8.0\refint\AcademicAnalytics.dll
 D:\AcademicAnalytics\obj\Debug\net8.0\AcademicAnalytics.pdb
 D:\AcademicAnalytics\obj\Debug\net8.0\AcademicAnalytics.genruntimeconfig.cache
 D:\AcademicAnalytics\obj\Debug\net8.0\ref\AcademicAnalytics.dll
-D:\AcademicAnalytics\obj\Debug\net8.0\AcademicAnalytics.sourcelink.json

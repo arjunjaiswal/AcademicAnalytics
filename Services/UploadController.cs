@@ -28,14 +28,13 @@ namespace AcademicAnalytics.Controllers
             HttpContext.Session.SetString("Department", Department ?? "");
             HttpContext.Session.SetString("FacultyName", FacultyName ?? "");
 
-            // Validate files present
+            // Validate files
             if (marksFile == null || mappingFile == null)
             {
                 TempData["Error"] = "Please upload both Excel files.";
                 return RedirectToAction("Index");
             }
 
-            // Validate extensions
             string marksExt = Path.GetExtension(marksFile.FileName).ToLower();
             string mappingExt = Path.GetExtension(mappingFile.FileName).ToLower();
 
@@ -45,7 +44,6 @@ namespace AcademicAnalytics.Controllers
                 return RedirectToAction("Index");
             }
 
-            // Validate size
             if (marksFile.Length > 5 * 1024 * 1024 || mappingFile.Length > 5 * 1024 * 1024)
             {
                 TempData["Error"] = "File size must be less than 5 MB.";
@@ -85,7 +83,6 @@ namespace AcademicAnalytics.Controllers
                 return RedirectToAction("Index");
             }
         }
-
 
         public IActionResult Analyze()
         {
@@ -161,9 +158,8 @@ namespace AcademicAnalytics.Controllers
                 }
             }
 
+            // 🔥 MAIN ANALYSIS
             AnalysisResult result = engine.Analyze(students, mapping);
-
-            List<string> insights = new List<string>();
 
             // ---------------- DIFFICULTY COUNTS ----------------
 
@@ -180,7 +176,8 @@ namespace AcademicAnalytics.Controllers
                     difficultyCounts[level]++;
             }
 
-            ViewBag.DifficultyCounts = difficultyCounts;
+            ViewBag.DifficultyLabels = difficultyCounts.Keys.ToList();
+            ViewBag.DifficultyData = difficultyCounts.Values.ToList();
 
             int easy = difficultyCounts["Easy"];
             int moderate = difficultyCounts["Moderate"];
@@ -199,65 +196,6 @@ namespace AcademicAnalytics.Controllers
 
             ViewBag.DifficultySummary = difficultySummary;
 
-
-            // ---------------- INSIGHTS ----------------
-
-            if (result.UnitPerformance.Count > 0)
-            {
-                var lowestUnit = result.UnitPerformance.OrderBy(x => x.Value).First();
-                insights.Add($"Unit {lowestUnit.Key} performance is lowest.");
-            }
-
-            if (result.QuestionAverage.Count > 0)
-            {
-                var difficultQ = result.QuestionAverage.OrderBy(x => x.Value).First();
-                insights.Add($"Question {difficultQ.Key} appears to be the most difficult.");
-            }
-
-            if (result.COAttainment.Count > 0)
-            {
-                var lowestCO = result.COAttainment.OrderBy(x => x.Value).First();
-                insights.Add($"{lowestCO.Key} attainment is lowest among all COs.");
-            }
-
-            if (result.BloomDistribution.Count > 0)
-            {
-                var dominantBloom = result.BloomDistribution.OrderByDescending(x => x.Value).First();
-                insights.Add($"Most questions belong to {dominantBloom.Key} level in Bloom taxonomy.");
-            }
-
-            ViewBag.Insights = insights;
-
-
-            // ---------------- RECOMMENDATIONS ----------------
-
-            List<string> recommendations = new List<string>();
-
-            if (result.UnitPerformance.Count > 0)
-            {
-                var weakestUnit = result.UnitPerformance.OrderBy(x => x.Value).First();
-                recommendations.Add($"Reinforce teaching for Unit {weakestUnit.Key} topics.");
-            }
-
-            if (result.COAttainment.Count > 0)
-            {
-                var weakestCO = result.COAttainment.OrderBy(x => x.Value).First();
-                recommendations.Add($"Provide additional practice for {weakestCO.Key} related outcomes.");
-            }
-
-            if (result.BloomDistribution.Count > 0)
-            {
-                var dominantBloom = result.BloomDistribution.OrderByDescending(x => x.Value).First();
-
-                if (dominantBloom.Key == "Remember" || dominantBloom.Key == "Understand")
-                {
-                    recommendations.Add("Consider including more higher-order Bloom level questions in future papers.");
-                }
-            }
-
-            ViewBag.Recommendations = recommendations;
-
-
             // ---------------- METADATA ----------------
 
             ViewBag.Subject = HttpContext.Session.GetString("Subject");
@@ -265,7 +203,6 @@ namespace AcademicAnalytics.Controllers
             ViewBag.AcademicYear = HttpContext.Session.GetString("AcademicYear");
             ViewBag.Department = HttpContext.Session.GetString("Department");
             ViewBag.FacultyName = HttpContext.Session.GetString("FacultyName");
-
 
             // ---------------- CLEANUP ----------------
 

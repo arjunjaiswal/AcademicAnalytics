@@ -19,7 +19,7 @@ namespace AcademicAnalytics.Services
                 {
                     double maxMarks = 0;
 
-                    var maxCell = row.Cell(5);
+                    var maxCell = row.Cell(6);   // 🔥 moved from 5 → 6
 
                     if (!maxCell.IsEmpty())
                     {
@@ -29,9 +29,13 @@ namespace AcademicAnalytics.Services
                     QuestionMap map = new QuestionMap
                     {
                         Question = row.Cell(1).GetString().Trim(),
-                        Unit = row.Cell(2).GetString().Trim(),
-                        CO = row.Cell(3).GetString().Trim(),
-                        Bloom = row.Cell(4).GetString().Trim(),
+
+                        Difficulty = row.Cell(2).GetString().Trim(),  // 🔥 NEW
+
+                        Unit = row.Cell(3).GetString().Trim(),
+                        CO = row.Cell(4).GetString().Trim(),
+                        Bloom = row.Cell(5).GetString().Trim(),
+
                         MaxMarks = maxMarks
                     };
 
