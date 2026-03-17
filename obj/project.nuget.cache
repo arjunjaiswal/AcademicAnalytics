@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "dgSpecHash": "sf5lLPdCGKQ=",
+  "success": true,
+  "projectFilePath": "D:\\AcademicAnalytics\\AcademicAnalytics.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\arjun.jaiswal\\.nuget\\packages\\closedxml\\0.105.0\\closedxml.0.105.0.nupkg.sha512",
+    "C:\\Users\\arjun.jaiswal\\.nuget\\packages\\closedxml.parser\\2.0.0\\closedxml.parser.2.0.0.nupkg.sha512",
+    "C:\\Users\\arjun.jaiswal\\.nuget\\packages\\documentformat.openxml\\3.1.1\\documentformat.openxml.3.1.1.nupkg.sha512",
+    "C:\\Users\\arjun.jaiswal\\.nuget\\packages\\documentformat.openxml.framework\\3.1.1\\documentformat.openxml.framework.3.1.1.nupkg.sha512",
+    "C:\\Users\\arjun.jaiswal\\.nuget\\packages\\excelnumberformat\\1.1.0\\excelnumberformat.1.1.0.nupkg.sha512",
+    "C:\\Users\\arjun.jaiswal\\.nuget\\packages\\rbush.signed\\4.0.0\\rbush.signed.4.0.0.nupkg.sha512",
+    "C:\\Users\\arjun.jaiswal\\.nuget\\packages\\sixlabors.fonts\\1.0.0\\sixlabors.fonts.1.0.0.nupkg.sha512",
+    "C:\\Users\\arjun.jaiswal\\.nuget\\packages\\skiasharp\\2.88.8\\skiasharp.2.88.8.nupkg.sha512",
+    "C:\\Users\\arjun.jaiswal\\.nuget\\packages\\skiasharp.nativeassets.macos\\2.88.8\\skiasharp.nativeassets.macos.2.88.8.nupkg.sha512",
+    "C:\\Users\\arjun.jaiswal\\.nuget\\packages\\skiasharp.nativeassets.win32\\2.88.8\\skiasharp.nativeassets.win32.2.88.8.nupkg.sha512",
+    "C:\\Users\\arjun.jaiswal\\.nuget\\packages\\system.io.packaging\\8.0.1\\system.io.packaging.8.0.1.nupkg.sha512",
+    "C:\\Users\\arjun.jaiswal\\.nuget\\packages\\xceed.document.net\\5.2.25608.6677\\xceed.document.net.5.2.25608.6677.nupkg.sha512",
+    "C:\\Users\\arjun.jaiswal\\.nuget\\packages\\xceed.drawing.net\\1.0.25608.6677\\xceed.drawing.net.1.0.25608.6677.nupkg.sha512",
+    "C:\\Users\\arjun.jaiswal\\.nuget\\packages\\xceed.pdf\\5.2.25608.6677\\xceed.pdf.5.2.25608.6677.nupkg.sha512",
+    "C:\\Users\\arjun.jaiswal\\.nuget\\packages\\xceed.words.net\\5.2.25608.6677\\xceed.words.net.5.2.25608.6677.nupkg.sha512"
+  ],
+  "logs": []
+}

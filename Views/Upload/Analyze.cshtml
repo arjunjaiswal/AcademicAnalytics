@@ -1,0 +1,361 @@
+﻿@model AcademicAnalytics.Models.AnalysisResult
+
+<div style="text-align:center; margin-top:20px;">
+    <h2>Academic Analytics Dashboard</h2>
+</div>
+
+<br />
+
+<p>
+    <strong>Subject:</strong> @ViewBag.Subject
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    <strong>Semester:</strong> @ViewBag.Semester
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    <strong>Academic Year:</strong> @ViewBag.AcademicYear
+</p>
+
+<p>
+    <strong>Department:</strong> @ViewBag.Department
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    <strong>Faculty:</strong> @ViewBag.FacultyName
+</p>
+
+
+<h3>Insights</h3>
+
+<div style="background:#f8f9fa;padding:15px;border-radius:6px;margin-bottom:20px;border:1px solid #ddd;">
+    <ul>
+        @foreach (var insight in ViewBag.Insights)
+        {
+            <li>@insight</li>
+        }
+    </ul>
+</div>
+
+
+<h3>Question Difficulty Index</h3>
+
+<table class="table table-bordered table-striped">
+
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Average Score (%)</th>
+            <th>Difficulty Level</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var q in Model.DifficultyIndex)
+        {
+            <tr>
+                <td>@q.Key</td>
+                <td>@Math.Round(q.Value, 2)%</td>
+                <td>@Model.DifficultyLevel[q.Key]</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+
+<h3>Difficulty Distribution</h3>
+
+<div style="width:450px;height:280px;margin:auto;">
+    <canvas id="difficultyChart"></canvas>
+</div>
+
+<hr />
+
+<div style="margin-top:10px;padding:10px;background:#eef5ff;border-radius:6px;">
+    <strong>Paper Difficulty Summary:</strong>
+    @ViewBag.DifficultySummary
+</div>
+
+<hr />
+
+
+<h3>Recommendations</h3>
+
+<div style="background:#fff8e6;padding:15px;border-radius:6px;margin-bottom:20px;border:1px solid #ddd;">
+    <ul>
+        @foreach (var rec in ViewBag.Recommendations)
+        {
+            <li>@rec</li>
+        }
+    </ul>
+</div>
+
+
+<!-- DASHBOARD GRID -->
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:25px;margin-top:20px;overflow-x:hidden;">
+
+    <!-- UNIT PERFORMANCE -->
+
+    <div style="background:white;padding:18px;border-radius:8px;
+        box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+
+        <h4 style="text-align:center;">Unit Performance</h4>
+
+        <canvas id="unitChart" style="height:260px;"></canvas>
+
+    </div>
+
+
+    <!-- CO ATTAINMENT -->
+
+    <div style="background:white;padding:18px;border-radius:8px;
+        box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+
+        <h4 style="text-align:center;">CO Attainment</h4>
+
+        <canvas id="coChart" style="height:260px;"></canvas>
+
+    </div>
+
+
+    <!-- QUESTION DIFFICULTY -->
+
+    <div style="background:white;padding:18px;border-radius:8px;
+        box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+
+        <h4 style="text-align:center;">Question Performance</h4>
+
+        <canvas id="questionChart" style="height:260px;"></canvas>
+
+    </div>
+
+
+    <!-- BLOOM TAXONOMY -->
+
+    <div style="background:white;padding:18px;border-radius:8px;
+        box-shadow:0 2px 6px rgba(0,0,0,0.15);">
+
+        <h4 style="text-align:center;">Bloom Taxonomy Distribution</h4>
+
+        <div style="width:300px;height:300px;margin:auto;">
+            <canvas id="bloomChart"></canvas>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+    //////////////////////////////////////////////////////////
+    // UNIT PERFORMANCE
+    //////////////////////////////////////////////////////////
+
+    const unitLabels = [
+    @foreach (var u in Model.UnitPerformance.Keys)
+    {
+        <text>"@u",</text>
+    }
+    ];
+
+    const unitData = [
+    @foreach (var u in Model.UnitPerformance.Values)
+    {
+        <text>@u,</text>
+    }
+    ];
+
+    new Chart(document.getElementById("unitChart"), {
+    type: 'bar',
+    data: {
+    labels: unitLabels,
+    datasets: [{
+    label: "Unit Performance",
+    data: unitData,
+    backgroundColor:"#3498db",
+    borderRadius:6
+    }]
+    },
+    options:{
+    responsive:true
+    }
+    });
+
+
+    //////////////////////////////////////////////////////////
+    // QUESTION PERFORMANCE
+    //////////////////////////////////////////////////////////
+
+    const qLabels = [
+    @foreach (var q in Model.QuestionAverage.Keys)
+    {
+        <text>"@q",</text>
+    }
+    ];
+
+    const qData = [
+    @foreach (var q in Model.QuestionAverage.Values)
+    {
+        <text>@q,</text>
+    }
+    ];
+
+    new Chart(document.getElementById("questionChart"), {
+    type: 'bar',
+    data: {
+    labels: qLabels,
+    datasets: [{
+    label:"Question Average",
+    data:qData,
+    backgroundColor:"#9b59b6",
+    borderRadius:6
+    }]
+    },
+    options:{
+    responsive:true
+    }
+    });
+
+
+    //////////////////////////////////////////////////////////
+    // CO ATTAINMENT
+    //////////////////////////////////////////////////////////
+
+    const coLabels = [
+    @foreach (var c in Model.COAttainment.Keys)
+    {
+        <text>"@c",</text>
+    }
+    ];
+
+    const coData = [
+    @foreach (var c in Model.COAttainment.Values)
+    {
+        <text>@c,</text>
+    }
+    ];
+
+    new Chart(document.getElementById("coChart"), {
+    type:'bar',
+    data:{
+    labels:coLabels,
+    datasets:[{
+    label:"CO Attainment",
+    data:coData,
+    backgroundColor:"#2ecc71",
+    borderRadius:6
+    }]
+    },
+    options:{
+    responsive:true
+    }
+    });
+
+
+    //////////////////////////////////////////////////////////
+    // BLOOM DISTRIBUTION
+    //////////////////////////////////////////////////////////
+
+    const bloomLabels = [
+    @foreach (var b in Model.BloomDistribution.Keys)
+    {
+        <text>"@b",</text>
+    }
+    ];
+
+    const bloomData = [
+    @foreach (var b in Model.BloomDistribution.Values)
+    {
+        <text>@b,</text>
+    }
+    ];
+
+    new Chart(document.getElementById("bloomChart"), {
+    type:'pie',
+    data:{
+    labels:bloomLabels,
+    datasets:[{
+    data:bloomData,
+    backgroundColor:[
+    "#3498db",
+    "#f06292",
+    "#f39c12",
+    "#8e44ad",
+    "#2ecc71",
+    "#e74c3c"
+    ],
+    borderWidth:2,
+    borderColor:"#fff"
+    }]
+    },
+    options:{
+    responsive:true,
+    maintainAspectRatio:false
+    }
+    });
+
+
+    //////////////////////////////////////////////////////////
+    // DIFFICULTY DISTRIBUTION
+    //////////////////////////////////////////////////////////
+
+    const difficultyLabels = [
+    @foreach (var d in ViewBag.DifficultyCounts.Keys)
+    {
+        <text>"@d",</text>
+    }
+    ];
+
+    const difficultyData = [
+    @foreach (var d in ViewBag.DifficultyCounts.Values)
+    {
+        <text>@d,</text>
+    }
+    ];
+
+    const difficultyColors = difficultyLabels.map(level=>{
+    if(level==="Easy") return "green";
+    if(level==="Moderate") return "orange";
+    if(level==="Difficult") return "red";
+    });
+
+    new Chart(document.getElementById("difficultyChart"),{
+
+    type:'bar',
+
+    data:{
+    labels:difficultyLabels,
+    datasets:[{
+    data:difficultyData,
+    backgroundColor:difficultyColors,
+    borderRadius:6,
+    barThickness:50
+    }]
+    },
+
+    options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{
+    legend:{display:false}
+    },
+    scales:{
+    y:{
+    beginAtZero:true,
+    suggestedMax:Math.max(...difficultyData)+1,
+    ticks:{
+    stepSize:1,
+    precision:0
+    },
+    title:{
+    display:true,
+    text:"Number of Questions"
+    }
+    }
+    }
+    }
+
+    });
+
+</script>

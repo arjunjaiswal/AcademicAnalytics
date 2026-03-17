@@ -1,0 +1,163 @@
+﻿@using Microsoft.AspNetCore.Http
+
+@{
+    var subject = Context.Session.GetString("Subject");
+    var semester = Context.Session.GetString("Semester");
+    var academicYear = Context.Session.GetString("AcademicYear");
+    var department = Context.Session.GetString("Department");
+    var faculty = Context.Session.GetString("FacultyName");
+}
+
+<div style="text-align:center; margin-top:20px;">
+    <h2>End Semester Examination Analytics Tool</h2>
+    <p style="color:gray;">
+        Initiative by the Department of Information Technology
+    </p>
+</div>
+
+<div style="display:flex; justify-content:center; margin-top:25px;">
+
+    <div style="width:550px; background:#ffffff; padding:25px; border-radius:8px;
+        box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+        
+        @if (TempData["Error"] != null)
+        { <div class="alert alert-danger">
+        @TempData["Error"] </div>
+        }
+
+        @if (TempData["Message"] != null)
+        {
+            <div style="color:green; font-weight:bold; margin-bottom:15px;">
+                @TempData["Message"]
+            </div>
+        }
+
+        @if (TempData["Message"] != null)
+        {
+            <script>
+                window.addEventListener("load", function () {
+                var analyzeBtn = document.getElementById("analyzeBtn");
+                var uploadBtn = document.getElementById("uploadBtn");
+
+                analyzeBtn.style.pointerEvents = "auto";
+                analyzeBtn.style.opacity = "1";
+
+                uploadBtn.disabled = true;
+                uploadBtn.style.opacity = "0.6";
+                uploadBtn.innerText = "Files Uploaded";
+                });
+            </script>
+        }
+
+        <form asp-controller="Upload" asp-action="UploadFiles" method="post" enctype="multipart/form-data">
+
+            <label>Subject</label> <input type="text" name="Subject" class="form-control" value="@subject" required />
+
+            <br />
+
+            <label>Semester</label> <select name="Semester" class="form-control">
+
+            <option selected="@(semester == "I")">I</option>
+            <option selected="@(semester == "II")">II</option>
+            <option selected="@(semester == "III")">III</option>
+            <option selected="@(semester == "IV")">IV</option>
+            <option selected="@(semester == "V")">V</option>
+            <option selected="@(semester == "VI")">VI</option>
+            <option selected="@(semester == "VII")">VII</option>
+            <option selected="@(semester == "VIII")">VIII</option>
+        </select>
+
+        <br />
+
+        <label>Academic Year</label> <input type="text" name="AcademicYear" class="form-control" value="@academicYear" placeholder="2025-26" required />
+
+        <br />
+
+        <label>Department</label> <select name="Department" class="form-control">
+
+        <option selected="@(department == "Electronics and Telecommunication Engg")">
+            Electronics and Telecommunication Engg
+        </option>
+
+        <option selected="@(department == "Information Technology")">
+            Information Technology
+        </option>
+
+        <option selected="@(department == "Computer Engineering")">
+            Computer Engineering
+        </option>
+
+        <option selected="@(department == "Mechanical Engineering")">
+            Mechanical Engineering
+        </option>
+
+        <option selected="@(department == "Computer Science and Engineering (Data Science)")">
+            Computer Science and Engineering (Data Science)
+        </option>
+
+        <option selected="@(department == "Artificial Intelligence and Machine Learning")">
+            Artificial Intelligence and Machine Learning
+        </option>
+
+        <option selected="@(department == "Artificial Intelligence (AI) and Data Science)")">
+            Artificial Intelligence (AI) and Data Science
+        </option>
+
+        <option selected="@(department == "Computer Science and Engineering (IOT and Cyber Security with Block Chain Technology)")">
+            Computer Science and Engineering (IOT and Cyber Security with Block Chain Technology)
+        </option>
+
+    </select>
+
+    <br />
+
+    <label>Faculty Name</label> <input type="text" name="FacultyName" class="form-control" value="@faculty" required />
+
+    <br />
+
+    <label>Upload Marks Excel</label> <input type="file" name="marksFile" class="form-control" required />
+
+    <br />
+
+    <label>Upload Mapping Excel</label> <input type="file" name="mappingFile" class="form-control" required />
+
+    <br />
+
+    <button id="uploadBtn" type="submit" class="btn btn-primary">
+        Upload Files
+    </button>
+    
+    <a id="analyzeBtn"
+            asp-controller="Upload"
+            asp-action="Analyze"
+            class="btn btn-success"
+            style="pointer-events:none; opacity:0.5;">
+        Analyze Results
+    </a>
+
+    <span id="processingArea" style="display:none; margin-left:10px;">
+        <span class="spinner-border spinner-border-sm text-primary"></span>
+
+        <span style="margin-left:5px; color:blue;">
+            Processing analysis...
+        </span>
+    </span>
+
+
+</form>
+
+</div>
+</div>
+<script>
+
+    document.getElementById("analyzeBtn").addEventListener("click", function () {
+
+        document.getElementById("processingArea").style.display = "inline";
+
+        this.innerText = "Processing...";
+        this.style.pointerEvents = "none";
+        this.style.opacity = "0.6";
+
+    });
+
+</script>
