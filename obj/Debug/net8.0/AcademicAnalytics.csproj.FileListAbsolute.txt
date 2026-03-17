@@ -51,3 +51,4 @@ D:\AcademicAnalytics\obj\Debug\net8.0\refint\AcademicAnalytics.dll
 D:\AcademicAnalytics\obj\Debug\net8.0\AcademicAnalytics.pdb
 D:\AcademicAnalytics\obj\Debug\net8.0\AcademicAnalytics.genruntimeconfig.cache
 D:\AcademicAnalytics\obj\Debug\net8.0\ref\AcademicAnalytics.dll
+D:\AcademicAnalytics\obj\Debug\net8.0\AcademicAnalytics.sourcelink.json

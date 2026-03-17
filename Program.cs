@@ -27,4 +27,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Upload}/{action=Index}/{id?}");
 
+app.Urls.Add("http://0.0.0.0:10000");
 app.Run();
