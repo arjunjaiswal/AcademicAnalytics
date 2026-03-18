@@ -33,8 +33,8 @@ namespace AcademicAnalytics.Services
                         Difficulty = row.Cell(2).GetString().Trim(),  // 🔥 NEW
 
                         Unit = row.Cell(3).GetString().Trim(),
-                        CO = row.Cell(4).GetString().Trim(),
-                        Bloom = row.Cell(5).GetString().Trim(),
+                        CO = row.Cell(4).GetString().Trim().ToUpper(),
+                        Bloom = row.Cell(5).GetString().Trim().ToUpper(),
 
                         MaxMarks = maxMarks
                     };

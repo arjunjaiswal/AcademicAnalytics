@@ -26,13 +26,97 @@
 
 <h3>Insights</h3>
 
-<div style="background:#f8f9fa;padding:15px;border-radius:6px;margin-bottom:20px;border:1px solid #ddd;">
-    <ul>
-        @foreach (var insight in Model.Insights)
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:20px;">
+
+    @{
+        var strengths = new List<string>();
+        var concerns = new List<string>();
+        var observations = new List<string>();
+
+        string current = "";
+
+        foreach (var item in Model.Insights)
         {
-            <li>@insight</li>
+            if (item == "Strengths:")
+            {
+                current = "S";
+                continue;
+            }
+            else if (item == "Concerns:")
+            {
+                current = "C";
+                continue;
+            }
+            else if (item == "Key Observations:")
+            {
+                current = "O";
+                continue;
+            }
+
+            if (current == "S") strengths.Add(item.Replace("• ", ""));
+            else if (current == "C") concerns.Add(item.Replace("• ", ""));
+            else if (current == "O") observations.Add(item.Replace("• ", ""));
         }
-    </ul>
+    }
+
+    <!-- 🟢 STRENGTHS -->
+    @if (strengths.Count > 0)
+    {
+        <div style="background:#f0fff4;border-left:6px solid #27ae60;padding:15px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+            <h4 style="color:#27ae60;margin-bottom:10px;">🟢 Strengths</h4>
+
+            @foreach (var s in strengths)
+            {
+                var text = s.ToLower();
+                var icon = text.Contains("strong performance") ? "💪"
+                         : text.Contains("above average") ? "📈"
+                         : "🟢";
+
+                <div style="margin-bottom:8px;line-height:1.5;">
+                    @icon @Html.Raw(s)
+                </div>
+            }
+        </div>
+    }
+
+    <!-- 🔴 CONCERNS -->
+    @if (concerns.Count > 0)
+    {
+        <div style="background:#fff5f5;border-left:6px solid #e74c3c;padding:15px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+            <h4 style="color:#e74c3c;margin-bottom:10px;">🔴 Concerns</h4>
+
+            @foreach (var c in concerns)
+            {
+                var text = c.ToLower();
+                var icon = text.Contains("weakness") ? "⚠️" : "❌";
+
+                <div style="margin-bottom:8px;line-height:1.5;">
+                    @icon @Html.Raw(c)
+                </div>
+            }
+        </div>
+    }
+
+    <!-- 🔵 OBSERVATIONS -->
+    @if (observations.Count > 0)
+    {
+        <div style="background:#eef6ff;border-left:6px solid #3498db;padding:15px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+            <h4 style="color:#3498db;margin-bottom:10px;">🔵 Key Observations</h4>
+
+            @foreach (var o in observations)
+            {
+                var text = o.ToLower();
+                var icon = text.Contains("challenging") ? "🔥"
+                         : text.Contains("majority") ? "📊"
+                         : "📌";
+
+                <div style="margin-bottom:8px;line-height:1.5;">
+                    @icon @Html.Raw(o)
+                </div>
+            }
+        </div>
+    }
+
 </div>
 
 <h3>Question Difficulty Index</h3>
@@ -41,6 +125,7 @@
     <thead>
         <tr>
             <th>Question</th>
+            <th>Unit</th>
             <th>Average Score (%)</th>
             <th>Difficulty Level</th>
         </tr>
@@ -49,7 +134,12 @@
         @foreach (var q in Model.DifficultyIndex)
         {
             <tr>
+                @{
+                    var map = Model.Mapping.FirstOrDefault(m => m.Question == q.Key);
+                }
+
                 <td>@q.Key.Replace(".", " ")</td>
+                <td>Unit @map?.Unit</td>
                 <td>@Math.Round(q.Value, 2)%</td>
                 <td>@Model.DifficultyLevel[q.Key]</td>
             </tr>
@@ -65,6 +155,7 @@
     <thead>
         <tr>
             <th>Question</th>
+            <th>Unit</th>
             <th>Given (Faculty)</th>
             <th>Actual (Performance)</th>
             <th>Status</th>
@@ -102,7 +193,12 @@
                 mismatch ? "background-color:#ffe6e6;" : "";
 
             <tr style="@rowStyle">
+                @{
+                    var map = Model.Mapping.FirstOrDefault(m => m.Question == q);
+                }
+
                 <td>@q.Replace(".", " ")</td>
+                <td>Unit @map?.Unit</td>
                 <td>@expected</td>
                 <td>@actual</td>
                 <td>@status</td>
@@ -130,14 +226,59 @@
 
 <h3>Recommendations</h3>
 
-<div style="background:#fff8e6;padding:15px;border-radius:6px;margin-bottom:20px;border:1px solid #ddd;">
-    <ul>
+@if (Model.Recommendations != null && Model.Recommendations.Count > 0)
+{
+    <div style="
+        background:#fffbea;
+        border-left:6px solid #f1c40f;
+        padding:18px;
+        border-radius:8px;
+        box-shadow:0 2px 6px rgba(0,0,0,0.1);
+        margin-bottom:20px;
+        ">
+
+        @* <h4 style="color:#2980b9;margin-bottom:12px;">💡 Teaching Recommendations</h4> *@
+        <h4 style="color:#b7950b;margin-bottom:12px;">💡 Teaching Recommendations</h4>
+
         @foreach (var rec in Model.Recommendations)
         {
-            <li>@rec</li>
+            var parts = rec.Split("|");
+            var text = parts[0];
+            var priority = parts.Length > 1 ? parts[1] : "Low";
+
+            string color =
+                priority == "High" ? "#e74c3c" :
+                priority == "Medium" ? "#f39c12" :
+                "#27ae60";
+
+            <div style="display:flex;justify-content:space-between;align-items:center;
+                margin-bottom:10px;font-size:15px;line-height:1.5;">
+
+                <div>
+                    👉 @text
+                </div>
+
+                <span style="
+                    background:@color;
+                    color:white;
+                    padding:4px 10px;
+                    border-radius:12px;
+                    font-size:12px;
+                    font-weight:bold;
+                    ">
+                    @priority
+                </span>
+            </div>
         }
-    </ul>
-</div>
+
+    </div>
+}
+else
+{
+    <div style="background:#f0fff4;border-left:6px solid #27ae60;padding:15px;border-radius:8px;">
+        <strong style="color:#27ae60;">No major improvement areas detected.</strong>
+    </div>
+}
 
 <!-- DASHBOARD GRID -->
 
@@ -231,7 +372,7 @@
     },
     y: {
     beginAtZero: true,
-    suggestedMax: Math.max(...data) + 1,   // 🔥 fix for label cutoff
+    suggestedMax: data && data.length ? Math.max(...data) + 1 : 5,   // 🔥 fix for label cutoff
     ticks: {
     stepSize: 1,
     precision: 0,
@@ -363,7 +504,7 @@
     },
     y: {
     beginAtZero: true,
-    suggestedMax: Math.max(...difficultyData) + 1,  // 🔥 fixes missing label
+    suggestedMax: difficultyData && difficultyData.length ? Math.max(...difficultyData) + 1 : 5,  // 🔥 fixes missing label
     ticks: {
     stepSize: 1,
     precision: 0,

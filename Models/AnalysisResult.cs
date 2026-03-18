@@ -30,6 +30,7 @@
         public ChartData COChart { get; set; } = new();
         public ChartData BloomChart { get; set; } = new();
 
+        public List<QuestionMap> Mapping { get; set; } = new();
     }
 
     public class ChartData

@@ -160,6 +160,7 @@ namespace AcademicAnalytics.Controllers
 
             // 🔥 MAIN ANALYSIS
             AnalysisResult result = engine.Analyze(students, mapping);
+            result.Mapping = mapping;
 
             // ---------------- DIFFICULTY COUNTS ----------------
 
