@@ -9,7 +9,7 @@ namespace AcademicAnalytics.Controllers
         public IActionResult Index()
         {
             ModelState.Clear();
-            return RedirectToAction("Index");
+            return View();
         }
 
         [HttpPost]
