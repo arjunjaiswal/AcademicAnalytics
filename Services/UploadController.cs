@@ -8,7 +8,8 @@ namespace AcademicAnalytics.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            ModelState.Clear();
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
