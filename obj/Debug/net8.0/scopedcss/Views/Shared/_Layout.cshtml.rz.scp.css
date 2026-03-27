@@ -39,10 +39,20 @@ button.accept-policy[b-013ygzbh5k] {
   line-height: inherit;
 }
 
+/*.footer {
+    position: static !important;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
+    margin-top: 30px;
+}*/
+
 .footer[b-013ygzbh5k] {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+    position: static !important;
+    width: 100%;
+    margin-top: 30px;
+    white-space: nowrap;
+    line-height: 50px; /* slightly tighter */
+    font-size: 14px;
 }

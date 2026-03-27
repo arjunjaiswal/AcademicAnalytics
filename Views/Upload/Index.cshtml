@@ -1,5 +1,4 @@
 ﻿@using Microsoft.AspNetCore.Http
-
 @{
     var subject = Context.Session.GetString("Subject");
     var semester = Context.Session.GetString("Semester");
@@ -8,149 +7,136 @@
     var faculty = Context.Session.GetString("FacultyName");
 }
 
-<div style="text-align:center; margin-top:20px;">
-    <h2>End Semester Examination Analytics Tool</h2>
-    <p style="color:gray;">
-        Initiative by the Department of Information Technology
-    </p>
-</div>
+<div class="page-center">
 
-<div style="display:flex; justify-content:center; margin-top:25px;">
+    <!-- Optional blobs -->
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
 
-    <div style="width:550px; background:#ffffff; padding:25px; border-radius:8px;
-        box-shadow:0 2px 8px rgba(0,0,0,0.15);">
-        
+    <div class="glass-card-index">
+
+        <!-- HEADER -->
+        <div class="page-title">
+            <h2>End Semester Examination Analytics Tool</h2>
+            <p>Built by the Department of Information Technology to empower academic insights</p>
+        </div>
+
+        <!-- ALERTS -->
         @if (TempData["Error"] != null)
-        { <div class="alert alert-danger">
-        @TempData["Error"] </div>
-        }
-
-        @if (TempData["Message"] != null)
         {
-            <div style="color:green; font-weight:bold; margin-bottom:15px;">
-                @TempData["Message"]
+            <div class="alert alert-danger">
+                @TempData["Error"]
             </div>
         }
 
         @if (TempData["Message"] != null)
         {
+            <div class="alert alert-success">
+                @TempData["Message"]
+            </div>
+        }
+
+        <!-- BUTTON STATE SCRIPT -->
+        @if (TempData["Message"] != null)
+        {
             <script>
-                window.addEventListener("load", function () {
-                var analyzeBtn = document.getElementById("analyzeBtn");
-                var uploadBtn = document.getElementById("uploadBtn");
+                        window.addEventListener("load", function() {
+                            var analyzeBtn = document.getElementById("analyzeBtn");
+                            var uploadBtn = document.getElementById("uploadBtn");
 
-                analyzeBtn.style.pointerEvents = "auto";
-                analyzeBtn.style.opacity = "1";
+                            analyzeBtn.style.pointerEvents = "auto";
+                            analyzeBtn.style.opacity = "1";
 
-                uploadBtn.disabled = true;
-                uploadBtn.style.opacity = "0.6";
-                uploadBtn.innerText = "Files Uploaded";
-                });
+                            uploadBtn.disabled = true;
+                            uploadBtn.style.opacity = "0.6";
+                            uploadBtn.innerText = "Files Uploaded";
+                        });
             </script>
         }
 
-        <form asp-controller="Upload" asp-action="UploadFiles" method="post" enctype="multipart/form-data">
+        <!-- FORM -->
+        <form asp-controller="Upload" asp-action="UploadFiles" method="post" enctype="multipart/form-data" autocomplete="off">
 
-            <label>Subject</label> <input type="text" name="Subject" class="form-control" value="@subject" required />
+            <label>Subject</label>
+            <input type="text" name="Subject" value="@subject" placeholder="Enter subject" required />
 
             <br />
 
-            <label>Semester</label> <select name="Semester" class="form-control">
+            <label>Semester</label>
+            <select name="Semester">
+                <option selected="@(semester == "I")">I</option>
+                <option selected="@(semester == "II")">II</option>
+                <option selected="@(semester == "III")">III</option>
+                <option selected="@(semester == "IV")">IV</option>
+                <option selected="@(semester == "V")">V</option>
+                <option selected="@(semester == "VI")">VI</option>
+                <option selected="@(semester == "VII")">VII</option>
+                <option selected="@(semester == "VIII")">VIII</option>
+            </select>
 
-            <option selected="@(semester == "I")">I</option>
-            <option selected="@(semester == "II")">II</option>
-            <option selected="@(semester == "III")">III</option>
-            <option selected="@(semester == "IV")">IV</option>
-            <option selected="@(semester == "V")">V</option>
-            <option selected="@(semester == "VI")">VI</option>
-            <option selected="@(semester == "VII")">VII</option>
-            <option selected="@(semester == "VIII")">VIII</option>
-        </select>
+            <br />
 
-        <br />
+            <label>Academic Year</label>
+            <input type="text" name="AcademicYear" value="@academicYear" placeholder="2025-26" required />
 
-        <label>Academic Year</label> <input type="text" name="AcademicYear" class="form-control" value="@academicYear" placeholder="2025-26" required />
+            <br />
 
-        <br />
+            <label>Department</label>
+            <select name="Department">
+                <option selected="@(department == "Electronics and Telecommunication Engg")">Electronics and Telecommunication Engg</option>
+                <option selected="@(department == "Information Technology")">Information Technology</option>
+                <option selected="@(department == "Computer Engineering")">Computer Engineering</option>
+                <option selected="@(department == "Mechanical Engineering")">Mechanical Engineering</option>
+                <option selected="@(department == "Computer Science and Engineering (Data Science)")">Computer Science and Engineering (Data Science)</option>
+                <option selected="@(department == "Artificial Intelligence and Machine Learning")">Artificial Intelligence and Machine Learning</option>
+                <option selected="@(department == "Artificial Intelligence (AI) and Data Science)")">Artificial Intelligence (AI) and Data Science</option>
+                <option selected="@(department == "Computer Science and Engineering (IOT and Cyber Security with Block Chain Technology)")">Computer Science and Engineering (IOT and Cyber Security with Block Chain Technology)</option>
+            </select>
 
-        <label>Department</label> <select name="Department" class="form-control">
+            <br />
 
-        <option selected="@(department == "Electronics and Telecommunication Engg")">
-            Electronics and Telecommunication Engg
-        </option>
+            <label>Faculty Name</label>
+            <input type="text" name="FacultyName" value="@faculty" required />
 
-        <option selected="@(department == "Information Technology")">
-            Information Technology
-        </option>
+            <br />
 
-        <option selected="@(department == "Computer Engineering")">
-            Computer Engineering
-        </option>
+            <label>Upload Marks Excel</label>
+            <input type="file" name="marksFile" required />
 
-        <option selected="@(department == "Mechanical Engineering")">
-            Mechanical Engineering
-        </option>
+            <br />
 
-        <option selected="@(department == "Computer Science and Engineering (Data Science)")">
-            Computer Science and Engineering (Data Science)
-        </option>
+            <label>Upload Mapping Excel</label>
+            <input type="file" name="mappingFile" required />
 
-        <option selected="@(department == "Artificial Intelligence and Machine Learning")">
-            Artificial Intelligence and Machine Learning
-        </option>
+            <br /><br />
+            <!-- BUTTONS -->
+            <button id="uploadBtn" type="submit" class="btn btn-primary">
+                Upload Files
+            </button>
 
-        <option selected="@(department == "Artificial Intelligence (AI) and Data Science)")">
-            Artificial Intelligence (AI) and Data Science
-        </option>
+            <a id="analyzeBtn"
+                   asp-controller="Upload"
+                   asp-action="Analyze"
+                   class="btn btn-success"
+                   style="pointer-events:none; opacity:0.5;">
+                Analyze Results
+            </a>
 
-        <option selected="@(department == "Computer Science and Engineering (IOT and Cyber Security with Block Chain Technology)")">
-            Computer Science and Engineering (IOT and Cyber Security with Block Chain Technology)
-        </option>
+            <!-- SPINNER -->
+            <span id="processingArea" class="spinner-area">
+                <span class="spinner-border spinner-border-sm text-light"></span>
+                <span style="margin-left:5px;">Processing analysis...</span>
+            </span>
 
-    </select>
+        </form>
 
-    <br />
-
-    <label>Faculty Name</label> <input type="text" name="FacultyName" class="form-control" value="@faculty" required />
-
-    <br />
-
-    <label>Upload Marks Excel</label> <input type="file" name="marksFile" class="form-control" required />
-
-    <br />
-
-    <label>Upload Mapping Excel</label> <input type="file" name="mappingFile" class="form-control" required />
-
-    <br />
-
-    <button id="uploadBtn" type="submit" class="btn btn-primary">
-        Upload Files
-    </button>
-    
-    <a id="analyzeBtn"
-            asp-controller="Upload"
-            asp-action="Analyze"
-            class="btn btn-success"
-            style="pointer-events:none; opacity:0.5;">
-        Analyze Results
-    </a>
-
-    <span id="processingArea" style="display:none; margin-left:10px;">
-        <span class="spinner-border spinner-border-sm text-primary"></span>
-
-        <span style="margin-left:5px; color:blue;">
-            Processing analysis...
-        </span>
-    </span>
-
-
-</form>
+    </div>
 
 </div>
-</div>
+
 <script>
-
-    document.getElementById("analyzeBtn").addEventListener("click", function () {
+    document.getElementById("analyzeBtn").addEventListener("click", function() {
 
         document.getElementById("processingArea").style.display = "inline";
 
@@ -159,5 +145,4 @@
         this.style.opacity = "0.6";
 
     });
-
 </script>

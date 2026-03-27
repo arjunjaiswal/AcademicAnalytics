@@ -1,7 +1,16 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\AcademicAnalytics\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1CA90CFD-A9EB-DEF7-B3FE-95E82DF13025}|AcademicAnalytics.csproj|d:\\academicanalytics\\views\\upload\\analyze.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1CA90CFD-A9EB-DEF7-B3FE-95E82DF13025}|AcademicAnalytics.csproj|solutionrelative:views\\upload\\analyze.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CA90CFD-A9EB-DEF7-B3FE-95E82DF13025}|AcademicAnalytics.csproj|d:\\academicanalytics\\services\\analyticsengine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CA90CFD-A9EB-DEF7-B3FE-95E82DF13025}|AcademicAnalytics.csproj|solutionrelative:services\\analyticsengine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +18,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Analyze.cshtml",
+              "DocumentMoniker": "D:\\AcademicAnalytics\\Views\\Upload\\Analyze.cshtml",
+              "RelativeDocumentMoniker": "Views\\Upload\\Analyze.cshtml",
+              "ToolTip": "D:\\AcademicAnalytics\\Views\\Upload\\Analyze.cshtml",
+              "RelativeToolTip": "Views\\Upload\\Analyze.cshtml",
+              "ViewState": "AgIAACgCAAAAAAAAAAAAAKIBAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-27T07:53:57.891Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AnalyticsEngine.cs",
+              "DocumentMoniker": "D:\\AcademicAnalytics\\Services\\AnalyticsEngine.cs",
+              "RelativeDocumentMoniker": "Services\\AnalyticsEngine.cs",
+              "ToolTip": "D:\\AcademicAnalytics\\Services\\AnalyticsEngine.cs",
+              "RelativeToolTip": "Services\\AnalyticsEngine.cs",
+              "ViewState": "AgIAAM8AAAAAAAAAAAAmwOYAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-27T07:50:16.699Z",
+              "EditorCaption": ""
             }
           ]
         }

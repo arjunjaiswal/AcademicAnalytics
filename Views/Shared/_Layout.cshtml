@@ -5,28 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]Academic Analytics Tool</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AcademicAnalytics.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/theme.css" asp-append-version="true" />
 </head>
+
 <body>
-    <div style="text-align:center; background:#f8f9fa; padding:5px;">
-        <img src="~/images/college_header.png" style="max-width:100%; height:auto;" />
-    </div>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <div class="app-container">
+
+        <!-- HEADER -->
+        <div style="text-align:center; background:#f8f9fa; padding:5px;">
+            <img src="~/images/college_header.png" style="max-width:100%; height:auto;" />
+        </div>
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+
+            <div class="topbar-left">
+                📊 Academic Analytics
+            </div>
+
+            <div class="topbar-right">
+                👋 @(
+                System.Globalization.CultureInfo.CurrentCulture.TextInfo
+                .ToTitleCase(Context.Session.GetString("User") ?? "User")
+                    )
+
+                <span class="divider">|</span>
+
+                <a href="/Account/Logout" class="logout-link">Logout</a>
+            </div>
+
+        </div>
+
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content container pb-3">
             @RenderBody()
         </main>
+
+        <!-- FOOTER -->
+        <footer class="footer border-top text-muted">
+            <div class="container">
+                &copy; 2026 - AcademicAnalytics -
+                <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - AcademicAnalytics - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>

@@ -6,11 +6,13 @@ namespace AcademicAnalytics.Controllers
 {
     public class UploadController : Controller
     {
-        public IActionResult Index()
-        {
-            ModelState.Clear();
-            return View();
-        }
+	public IActionResult Index()
+	{
+    		if (HttpContext.Session.GetString("User") == null)
+        		return RedirectToAction("Login", "Account");
+    		ModelState.Clear();
+    		return View();
+	}
 
         [HttpPost]
         public IActionResult UploadFiles(

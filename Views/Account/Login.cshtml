@@ -1,0 +1,287 @@
+﻿@model AcademicAnalytics.Models.LoginModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Academic Analytics Login</title>
+
+    <style>
+            body {
+                margin: 0;
+                height: 100vh;
+                font-family: 'Segoe UI', sans-serif;
+                background: linear-gradient(135deg, #f5f7fa, #e4ecff, #f0f4ff);
+                background-size: 200% 200%;
+                animation: gradientBG 12s ease infinite;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            @@keyframes gradientBG {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+
+            .blob {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(80px); /* reduced blur */
+                opacity: 0.4;       /* increased visibility */
+                z-index: 0;
+            }
+
+            /* Blob 1 */
+            .blob1 {
+                width: 300px;
+                height: 300px;
+                background: #ff6b6b;
+                top: 10%;
+                left: 15%;
+                animation: moveBlob1 12s ease-in-out infinite;
+            }
+
+            @@keyframes moveBlob1 {
+                0%, 100% { transform: translate(0, 0); }
+                50% { transform: translate(40px, -30px); }
+            }
+
+            /* Blob 2 */
+            .blob2 {
+                width: 250px;
+                height: 250px;
+                background: #00d4ff;
+                bottom: 10%;
+                right: 15%;
+                animation: moveBlob2 15s ease-in-out infinite;
+            }
+
+            @@keyframes moveBlob2 {
+                0%, 100% { transform: translate(0, 0); }
+                50% { transform: translate(-50px, 40px); }
+            }
+
+            /* Blob 3 */
+            .blob3 {
+                width: 200px;
+                height: 200px;
+                background: #ffd93d;
+                top: 60%;
+                left: 40%;
+                animation: moveBlob3 18s ease-in-out infinite;
+            }
+
+            @@keyframes moveBlob3 {
+                0%, 100% { transform: translate(0, 0); }
+                50% { transform: translate(30px, 50px); }
+            }
+
+            .login-card {
+                width: 340px;
+                padding: 40px;
+                border-radius: 18px;
+                max-width: 360px;
+                background: rgba(255, 255, 255, 0.75);
+                backdrop-filter: blur(12px);
+
+                border: 1px solid rgba(0,0,0,0.05);
+
+                box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+
+                text-align: center;
+                color: #2c3e50;
+
+                position: relative;
+                z-index: 1;
+            }
+
+            .login-card h2 {
+                margin-bottom: 25px;
+                color: #333;
+            }
+
+            .input-box {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+            .input-box input {
+                width: 100%;
+                padding: 12px;
+                box-sizing: border-box; /* VERY IMPORTANT */
+                border-radius: 8px;
+                outline: none;
+                background: rgba(255,255,255,0.9);
+                border: 1px solid #e0e6ed;
+                color: #2c3e50;
+                font-size: 14px;
+                transition: all 0.2s ease;
+            }
+
+            .input-box input:focus {
+                border: 1px solid #6366f1;
+                box-shadow: 0 0 0 2px rgba(99,102,241,0.15);
+                transform: scale(1.01);
+            }
+
+            .input-box input::placeholder {
+                /* color: rgba(255,255,255,0.7); */
+                color: #9aa4b2;
+            }
+
+            .password-box {
+                position: relative;
+            }
+
+            .toggle-password {
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                transition: 0.2s;
+                cursor: pointer;
+                color: #6b7280;
+                display: flex;
+                align-items: center;
+            }
+
+            .toggle-password:hover {
+                color: #2c3e50;
+            }
+
+            .login-btn {
+                width: 100%;
+                padding: 12px;
+                border: none;
+                border-radius: 8px;
+                display: block;
+                background: linear-gradient(135deg, #6366f1, #8b5cf6);
+                color: white;
+                font-size: 15px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: 0.25s;
+            }
+
+            .login-btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            }
+
+            .error {
+                color: red;
+                margin-top: 10px;
+                font-size: 14px;
+            }
+
+            .title {
+                font-size: 22px;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .subtitle {
+                font-size: 13px;
+                font-weight: 500;
+                color: #6b7280;
+                margin-bottom: 20px;
+                letter-spacing: 0.5px;
+            }
+
+            .title-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                margin-bottom: 5px;
+            }
+
+            .icon {
+                font-size: 24px;
+            }
+
+            .title-text {
+                font-size: 24px;
+                font-weight: 700;
+                color: #2c3e50; /* override gradient for clarity */
+            }
+    </style>
+</head>
+<body>
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+
+    <div class="login-card">
+        <div class="title-container">
+            <span class="icon">📊</span>
+            <span class="title-text">Academic Analytics</span>
+        </div>
+        <div class="subtitle">Faculty Login</div>
+
+        <form method="post">
+            <div class="input-box">
+                <input type="text" name="Username" placeholder="Username" required />
+            </div>
+
+            <div class="input-box password-box">
+                <input type="password" id="password" name="Password" placeholder="Password" required />
+                <span class="toggle-password" onclick="togglePassword(this)">
+                    <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </span>
+            </div>
+
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="error">@ViewBag.Error</div>
+        }
+    </div>
+    <script>
+        function togglePassword(el) {
+            var pwd = document.getElementById("password");
+            var icon = document.querySelector(".toggle-password svg");
+
+            if (pwd.type === "password") {
+                pwd.type = "text";
+
+                icon.innerHTML = `
+                    <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C5 20 1 12 1 12a21.77 21.77 0 0 1 5.06-6.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.77 21.77 0 0 1-2.16 3.19M1 1l22 22"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                `;
+            } else {
+                pwd.type = "password";
+
+                icon.innerHTML = `
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                `;
+            }
+        }
+
+        // 🔥 Keyboard shortcut: Ctrl + H
+        document.addEventListener("keydown", function (e) {
+            if (e.ctrlKey && e.key.toLowerCase() === "h") {
+                e.preventDefault();
+
+                var pwd = document.getElementById("password");
+                var toggle = document.querySelector(".toggle-password");
+
+                togglePassword(toggle);
+            }
+        });
+    </script>
+</body>
+</html>

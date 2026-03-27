@@ -109,34 +109,57 @@ namespace AcademicAnalytics.Services
             // =========================
             // UNIT PERFORMANCE
             // =========================
+
+            var unitTotals = new Dictionary<string, (double obtained, double total)>();
+
             foreach (var q in mapping)
             {
-                if (!result.UnitPerformance.ContainsKey(q.Unit))
-                    result.UnitPerformance[q.Unit] = 0;
+                if (!unitTotals.ContainsKey(q.Unit))
+                    unitTotals[q.Unit] = (0, 0);
 
-                double avg = result.QuestionAverage.ContainsKey(q.Question)
-                    ? result.QuestionAverage[q.Question]
-                    : 0;
-
-                result.UnitPerformance[q.Unit] += avg;
+                if (result.QuestionAverage.ContainsKey(q.Question) && q.MaxMarks > 0)
+                {
+                    unitTotals[q.Unit] = (
+                        unitTotals[q.Unit].obtained + result.QuestionAverage[q.Question],
+                        unitTotals[q.Unit].total + q.MaxMarks
+                    );
+                }
             }
+
+            result.UnitPerformance = unitTotals.ToDictionary(
+                u => u.Key,
+                u => u.Value.total > 0 ? (u.Value.obtained / u.Value.total) * 100 : 0
+            );
 
             // =========================
             // CO ATTAINMENT
             // =========================
+            var coTotals = new Dictionary<string, (double obtained, double total)>();
+
             foreach (var q in mapping)
             {
                 string coKey = NormalizeCO(q.CO);
 
-                if (!result.COAttainment.ContainsKey(coKey))
-                    result.COAttainment[coKey] = 0;
+                if (!coTotals.ContainsKey(coKey))
+                    coTotals[coKey] = (0, 0);
 
                 double avg = result.QuestionAverage.ContainsKey(q.Question)
                     ? result.QuestionAverage[q.Question]
                     : 0;
 
-                result.COAttainment[coKey] += avg;
+                coTotals[coKey] = (
+                    coTotals[coKey].obtained + avg,
+                    coTotals[coKey].total + q.MaxMarks
+                );
             }
+
+            // 🔥 Convert to percentage
+            result.COAttainment = coTotals.ToDictionary(
+                c => c.Key,
+                c => c.Value.total > 0
+                    ? (c.Value.obtained / c.Value.total) * 100
+                    : 0
+            );
 
             // =========================
             // BLOOM DISTRIBUTION
@@ -166,11 +189,17 @@ namespace AcademicAnalytics.Services
                 double percent = (q.Value / map.MaxMarks) * 100;
 
                 qLabels.Add(q.Key.Replace(".", " "));
-                qValues.Add(q.Value);
+                //qValues.Add(q.Value);
+                qValues.Add(percent);
 
-                if (percent < 40) qColors.Add("#c0392b");
-                else if (percent > 75) qColors.Add("#27ae60");
-                else qColors.Add("#2980b9");
+                string level = result.DifficultyLevel[q.Key];
+
+                if (level == "Easy")
+                    qColors.Add("#27ae60");
+                else if (level == "Moderate")
+                    qColors.Add("#2980b9");
+                else
+                    qColors.Add("#c0392b");
             }
 
             result.QuestionChart = new ChartData
@@ -179,23 +208,27 @@ namespace AcademicAnalytics.Services
                 Values = qValues,
                 Colors = qColors,
                 XAxisTitle = "Questions",
-                YAxisTitle = "Average Marks"
+                YAxisTitle = "Average Percentage (%)"
             };
+
+            var sortedUnits = result.UnitPerformance
+                .OrderBy(u => int.Parse(u.Key))   // 🔥 sort by unit number
+                .ToList();
 
             result.UnitChart = new ChartData
             {
-                Labels = result.UnitPerformance.Keys.Select(u => $"Unit {u}").ToList(),
-                Values = result.UnitPerformance.Values.ToList(),
+                Labels = sortedUnits.Select(u => $"Unit {u.Key}").ToList(),
+                Values = sortedUnits.Select(u => u.Value).ToList(),
                 XAxisTitle = "Units",
-                YAxisTitle = "Total Average Marks"
+                YAxisTitle = "Performance (%)"
             };
 
             result.COChart = new ChartData
             {
                 Labels = result.COAttainment.Keys.ToList(),
                 Values = result.COAttainment.Values.ToList(),
-                XAxisTitle = "CO",
-                YAxisTitle = "Attainment"
+                XAxisTitle = "Course Outcomes",
+                YAxisTitle = "Attainment (%)"
             };
 
             result.BloomChart = new ChartData
@@ -228,9 +261,10 @@ namespace AcademicAnalytics.Services
                 var map = mapping.FirstOrDefault(m => m.Question == q.Key);
                 if (map == null || map.MaxMarks == 0) continue;
 
-                double percent = (q.Value / map.MaxMarks) * 100;
+                // ✅ Use already computed difficulty level
+                string level = result.DifficultyLevel[q.Key];
 
-                if (percent < 40)
+                if (level == "Difficult")
                 {
                     weakQuestions.Add(q.Key);
 
@@ -241,7 +275,7 @@ namespace AcademicAnalytics.Services
 
                     weakAreas[key]++;
                 }
-                else if (percent > 75)
+                else if (level == "Easy")
                 {
                     if (!strongUnits.ContainsKey(map.Unit))
                         strongUnits[map.Unit] = 0;
@@ -257,9 +291,31 @@ namespace AcademicAnalytics.Services
             {
                 var max = strongUnits.Max(u => u.Value);
 
-                var topUnits = strongUnits
-                    .Where(u => u.Value == max)
-                    .Select(u => u.Key);
+                //var topUnits = strongUnits
+                //    .Where(u => u.Value == max)
+                //    .Select(u => u.Key);
+
+                var topUnits = strongUnits.Keys
+                .Where(unit =>
+                {
+                    var questions = mapping.Where(m => m.Unit == unit);
+                        
+                    double total = 0, obtained = 0;
+
+                    foreach (var q in questions)
+                    {
+                        if (result.QuestionAverage.ContainsKey(q.Question) && q.MaxMarks > 0)
+                        {
+                            obtained += result.QuestionAverage[q.Question];
+                            total += q.MaxMarks;
+                        }
+                    }
+
+                    double percent = total > 0 ? (obtained / total) * 100 : 0;
+
+                    return percent >= 75;
+                })
+                .ToList();
 
                 var unitDetails = topUnits.Select(unit =>
                 {
@@ -278,15 +334,24 @@ namespace AcademicAnalytics.Services
 
                     double percent = total > 0 ? (obtained / total) * 100 : 0;
 
+                    // 🔥 Only keep truly strong units
+                    if (percent < 75) return null;
+
                     var blooms = questions
                         .Select(m => NormalizeBloom(m.Bloom))
                         .Distinct()
                         .OrderBy(b => bloomOrder.IndexOf(b));
 
                     return $"Unit {unit} ({ColorPercent(percent)}, {string.Join(", ", blooms)})";
-                });
+                })
+                .Where(x => x != null)
+                .ToList();
 
-                strengths.Add($"Strong performance in {string.Join(" and ", unitDetails)}");
+                //strengths.Add($"Strong performance in {string.Join(" and ", unitDetails)}");
+                if (unitDetails.Count > 0)
+                {
+                    strengths.Add($"Strong performance in {string.Join(" and ", unitDetails)}");
+                }
             }
 
 
@@ -296,7 +361,25 @@ namespace AcademicAnalytics.Services
                 double avg = result.UnitPerformance.Values.Average();
 
                 var aboveAvgUnits = result.UnitPerformance
-                    .Where(u => u.Value > avg)
+                    .Where(u =>
+                    {
+                        var questions = mapping.Where(m => m.Unit == u.Key);
+
+                        double total = 0, obtained = 0;
+
+                        foreach (var q in questions)
+                        {
+                            if (result.QuestionAverage.ContainsKey(q.Question) && q.MaxMarks > 0)
+                            {
+                                obtained += result.QuestionAverage[q.Question];
+                                total += q.MaxMarks;
+                            }
+                        }
+
+                        double percent = total > 0 ? (obtained / total) * 100 : 0;
+
+                        return percent >= 50 && percent < 75;   // 🔥 only moderate
+                    })
                     .Select(unit =>
                     {
                         var questions = mapping.Where(m => m.Unit == unit.Key);
@@ -321,7 +404,8 @@ namespace AcademicAnalytics.Services
 
                 if (aboveAvgUnits.Count > 0)
                 {
-                    strengths.Add($"Overall performance is above average in {string.Join(" and ", aboveAvgUnits)}");
+                    //strengths.Add($"Overall performance is above average in {string.Join(" and ", aboveAvgUnits)}");
+                    strengths.Add($"Moderate performance observed in {string.Join(" and ", aboveAvgUnits)}");
                 }
             }
 
@@ -350,16 +434,20 @@ namespace AcademicAnalytics.Services
                 var formatted = topWeak.Select(a =>
                 {
                     var parts = a.Key.Split(" - ");
-                    string unit = parts[0];
+                    string unit = parts[0];              // e.g. "Unit 2"
                     string bloom = parts[1];
 
-                    // 🔥 Calculate % for bloom
-                    var questions = mapping
-                        .Where(m => m.Unit == unit.Replace("Unit ", "") && NormalizeBloom(m.Bloom) == bloom);
+                    string unitNumber = unit.Replace("Unit ", "");
+
+                    // =========================
+                    // 🔹 Bloom-level % (existing)
+                    // =========================
+                    var bloomQuestions = mapping
+                        .Where(m => m.Unit == unitNumber && NormalizeBloom(m.Bloom) == bloom);
 
                     double total = 0, obtained = 0;
 
-                    foreach (var q in questions)
+                    foreach (var q in bloomQuestions)
                     {
                         if (result.QuestionAverage.ContainsKey(q.Question) && q.MaxMarks > 0)
                         {
@@ -370,8 +458,38 @@ namespace AcademicAnalytics.Services
 
                     double percent = total > 0 ? (obtained / total) * 100 : 0;
 
-                    return $"{bloom} level within {unit} despite overall moderate performance ({ColorPercent(percent)})";
-                });
+                    // =========================
+                    // 🔹 Unit-level % (NEW)
+                    // =========================
+                    var unitQuestions = mapping
+                        .Where(m => m.Unit == unitNumber);
+
+                    double unitTotal = 0, unitObtained = 0;
+
+                    foreach (var q in unitQuestions)
+                    {
+                        if (result.QuestionAverage.ContainsKey(q.Question) && q.MaxMarks > 0)
+                        {
+                            unitObtained += result.QuestionAverage[q.Question];
+                            unitTotal += q.MaxMarks;
+                        }
+                    }
+
+                    double unitPercent = unitTotal > 0 ? (unitObtained / unitTotal) * 100 : 0;
+
+                    // =========================
+                    // 🔥 FINAL MESSAGE
+                    // =========================
+                    //return $"{bloom} level within {unit} ({ColorPercent(percent)}), while overall unit performance being {ColorPercent(unitPercent)}";
+                    if (Math.Abs(percent - unitPercent) < 0.1)
+                    {
+                        return $"{bloom} level within {unit} shows low performance ({ColorPercent(percent)})";
+                    }
+                    else
+                    {
+                        return $"{bloom} level within {unit} ({ColorPercent(percent)}), while overall unit performance is {ColorPercent(unitPercent)}";
+                    }
+                }); 
 
                 concerns.Add($"Students show weakness in {string.Join(" and ", formatted)}");
             }

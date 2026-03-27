@@ -40,5 +40,9 @@
         public List<string> Colors { get; set; } = new();
         public string XAxisTitle { get; set; } = "";
         public string YAxisTitle { get; set; } = "";
+
+        public List<double> EasyValues { get; set; }
+        public List<double> ModerateValues { get; set; }
+        public List<double> DifficultValues { get; set; }
     }
 }

@@ -32,7 +32,8 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Upload}/{action=Index}/{id?}");
+    //pattern: "{controller=Upload}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 
 // 🔥 KEY FIX: Only apply this for production (Render)

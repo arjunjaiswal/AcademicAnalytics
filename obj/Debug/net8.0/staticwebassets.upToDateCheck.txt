@@ -1,4 +1,5 @@
 wwwroot\css\site.css
+wwwroot\css\theme.css
 wwwroot\favicon.ico
 wwwroot\images\college_header.png
 wwwroot\js\site.js
